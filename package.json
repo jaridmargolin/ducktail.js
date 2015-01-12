@@ -11,6 +11,7 @@
   "bugs": {
     "url": "https://github.com/jaridmargolin/ducktail.js/issues"
   },
+  "main": "lib/ducktail.js",
   "scripts": {
     "test": "npm run jshint && npm run mocha",
     "mocha": "./node_modules/.bin/mocha --reporter spec",
