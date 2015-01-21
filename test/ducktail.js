@@ -24,9 +24,23 @@ var ducktail = require('../lib/ducktail');
  * reusable
  * ---------------------------------------------------------------------------*/
 
-var fakePath = path.resolve('./test/fixtures/fake.hbs');
-var tmplPath = path.resolve('./test/fixtures/tmpl.hbs');
-var tmplData = { title: 'Title' };
+var fakePath     = path.resolve('./test/fixtures/fake.hbs');
+var tmplPath     = path.resolve('./test/fixtures/tmpl.hbs');
+var wPartialPath  = path.resolve('./test/fixtures/with-partial.hbs');
+var wHelperPath  = path.resolve('./test/fixtures/with-helper.hbs');
+var partialPath = path.resolve('./test/fixtures/partial.hbs');
+var tmplData     = { title: 'Title', phone: '8025557788' };
+
+var partials = {
+  partial: partialPath
+};
+
+var helpers = {
+  formatPhone: function(phoneNumber) {
+    phoneNumber = phoneNumber.toString();
+    return '(' + phoneNumber.substr(0,3) + ') ' + phoneNumber.substr(3,3) + '-' + phoneNumber.substr(6,4);
+  }
+};
 
 
 /* -----------------------------------------------------------------------------
@@ -72,6 +86,24 @@ describe('ducktail.js', function () {
           assert.equal(self.readFileSpy.callCount, 1);
           done();
         });
+      });
+    });
+
+    it('Should render specified partials.', function (done) {
+      ducktail.render(wPartialPath, tmplData, {
+        partials: partials
+      }, function (err, contents) {
+        assert.equal(contents, '<h1>Title</h1>\n<h2>Partial</h2>');
+        done();
+      });
+    });
+
+    it('Should render using specified helpers.', function (done) {
+      ducktail.render(wHelperPath, tmplData, {
+        helpers: helpers
+      }, function (err, contents) {
+        assert.equal(contents, '<p>(802) 555-7788</p>');
+        done();
       });
     });
 
